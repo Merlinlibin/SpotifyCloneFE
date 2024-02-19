@@ -4,8 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { userActor } from "../../states/Actors/UserActor";
+import { Oval } from "react-loader-spinner";
+
 const Login = () => {
   const dispatch = useDispatch();
+  const [loading, setloading] = useState(false);
   const { user, isAuthenticated } = useSelector((state) => state.account);
   const [userDetails, setUserDetails] = useState({
     username: "",
@@ -15,6 +18,7 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
+    setloading(true);
     const { password, username } = userDetails;
     let d = JSON.stringify({
       password,
@@ -37,9 +41,11 @@ const Login = () => {
       toast.success(data.message);
       localStorage.setItem("token", JSON.stringify(data.token));
       dispatch(userActor(data.user));
+      setloading(false);
       navigate("/");
     } else {
       toast.error(data.message);
+      setloading(false);
     }
   };
   const onChange = (e) => {
@@ -97,12 +103,18 @@ const Login = () => {
               />
             </div>
             <div className="w-full text-left py-4">
-              <input
+              <button
                 type="submit"
-                value="Log in"
                 placeholder="Password"
-                className="block cursor-pointer w-full outline-none bg-green-400 text-black p-3 hover:scale-105 translate-all duration-200 font-medium hover:font-semibold text-center rounded-full "
-              />
+                className="block cursor-pointer w-full outline-none bg-green-400 text-black p-3 hover:scale-105 translate-all duration-200 font-medium hover:font-semibold text-center rounded-full ">
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <Oval color="white" height="25" width="25" />
+                  </div>
+                ) : (
+                  "Login"
+                )}
+              </button>
             </div>
             <div className="w-full text-center py-4">
               <Link

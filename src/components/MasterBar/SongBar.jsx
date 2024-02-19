@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 
 const SongBar = () => {
   const { masterSong, isPlaying } = useSelector((state) => state.mainSong);
+  const { user, isAuthenticated } = useSelector((state) => state.account);
   const {
     progress,
     setProgress,
@@ -42,34 +43,39 @@ const SongBar = () => {
 
   // Add song to the liked song array
   const addToLiked = async () => {
-    console.log(masterSong.mp3);
-    let data = JSON.stringify({
-      song_mp3: masterSong.mp3.src,
-      song_title: masterSong.title,
-      song_artist: masterSong.artist,
-      song_thumbnail: masterSong.img,
-      id: masterSong.id,
-    });
-    const res = await fetch(
-      "https://spotifyclonebackend.onrender.com/api/user/like",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.getItem("token"),
-        },
-        body: data,
+    if (isAuthenticated) {
+      console.log(masterSong.mp3);
+      let data = JSON.stringify({
+        song_mp3: masterSong.mp3.src,
+        song_title: masterSong.title,
+        song_artist: masterSong.artist,
+        song_thumbnail: masterSong.img,
+        id: masterSong.id,
+      });
+      const res = await fetch(
+        "https://spotifyclonebackend.onrender.com/api/user/like",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("token"),
+          },
+          body: data,
+        }
+      );
+
+      let d = await res.json();
+
+      if (d.success) {
+        toast.success(d.message);
+      } else {
+        toast.error(d.message);
       }
-    );
-
-    let d = await res.json();
-
-    if (d.success) {
-      toast.success(d.message);
-    } else {
-      toast.error(d.message);
+      console.log(d.user.likedSongs);
     }
-    console.log(d.user.likedSongs);
+    else {
+      toast.error("Login and continue");
+    }
   };
 
   useEffect(() => {

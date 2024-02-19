@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./signup.css";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { Oval } from "react-loader-spinner";
 
 const months = [
   "January",
@@ -20,6 +21,7 @@ const months = [
 ];
 
 const Signup = () => {
+   const [loading, setloading] = useState(false);
   const [userDetails, setUserDetails] = useState({
     email: "",
     day: "",
@@ -31,8 +33,10 @@ const Signup = () => {
   });
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.account);
+
   const registerUser = async (e) => {
     e.preventDefault();
+    setloading(true);
     console.log(userDetails);
     const index = months.indexOf(userDetails.month);
     let DOB = `${index}-${userDetails.day}-${userDetails.year}`;
@@ -67,10 +71,12 @@ const Signup = () => {
         password: "",
         gender: "",
       });
+      setloading(false);
       toast.success(data.message);
       navigate("/");
       localStorage.setItem("token", JSON.stringify(data.token));
     } else {
+      setloading(false);
       toast.error(data.message);
     }
     console.log(data);
@@ -317,11 +323,17 @@ const Signup = () => {
               </div>
 
               <div className="w-full text-left py-4">
-                <input
+                <button
                   type="submit"
-                  value="Sign up"
                   className="block cursor-pointer w-1/2 mx-auto outline-none bg-green-400 text-black p-3 hover:scale-105 translate-all duration-200 font-medium hover:font-semibold text-center rounded-full "
-                />
+                >{loading ? (
+                  <div className="flex items-center justify-center">
+                    <Oval color="white" height="25" width="25" />
+                  </div>
+                ) : (
+                  "Sign up"
+                  )}
+                  </button>
               </div>
             </form>
             <div className="border-b border-gray-400 w-3/4 my-4 mx-auto"></div>
