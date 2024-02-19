@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { userActor } from "../../states/Actors/UserActor";
 import { Oval } from "react-loader-spinner";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,21 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const eyeref = useRef("");
+  const passref = useRef("");
+
+  const togglepass = () => {
+    if (
+      passref.current.type == "password" &&
+      eyeref.current.className == "bi bi-eye-slash eye"
+    ) {
+      passref.current.type = "text";
+      eyeref.current.className = "bi bi-eye eye";
+    } else {
+      passref.current.type = "password";
+      eyeref.current.className = "bi bi-eye-slash eye";
+    }
+  };
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -74,15 +90,16 @@ const Login = () => {
               <label
                 htmlFor="username"
                 className="font-semibold mb-2 inline-block">
-                Email or username
+                Email 
               </label>
               <input
-                type="text"
+                required
+                type="email"
                 id="username"
                 value={userDetails.username}
                 onChange={onChange}
                 name="username"
-                placeholder="Email or username"
+                placeholder="Email "
                 className="block w-full rounded-[4px] border-0  text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[3px] focus:ring-inset focus:ring-white-600 outline-none p-3 hover:ring-white bg-[#1a1919]"
               />
             </div>
@@ -92,15 +109,23 @@ const Login = () => {
                 className="font-semibold mb-2 inline-block">
                 Password
               </label>
-              <input
-                type="text"
-                id="password"
-                value={userDetails.password}
-                onChange={onChange}
-                name="password"
-                placeholder="Password"
-                className="block w-full rounded-[4px] border-0  text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[3px] focus:ring-inset focus:ring-white-600 outline-none p-3 hover:ring-white bg-[#1a1919]"
-              />
+              <div className="pass">
+                <input
+                  required
+                  type="password"
+                  id="password"
+                  value={userDetails.password}
+                  ref={passref}
+                  onChange={onChange}
+                  name="password"
+                  placeholder="Password"
+                  className="block w-full rounded-[4px] border-0  text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[3px] focus:ring-inset focus:ring-white-600 outline-none p-3 hover:ring-white bg-[#1a1919]"
+                />
+                <i
+                  className="bi bi-eye-slash eye"
+                  ref={eyeref}
+                  onClick={togglepass}></i>
+              </div>
             </div>
             <div className="w-full text-left py-4">
               <button

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./signup.css";
 import { toast } from "react-toastify";
@@ -33,6 +33,22 @@ const Signup = () => {
   });
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.account);
+
+    const eyeref = useRef("");
+    const passref = useRef("");
+
+    const togglepass = () => {
+      if (
+        passref.current.type == "password" &&
+        eyeref.current.className == "bi bi-eye-slash eye"
+      ) {
+        passref.current.type = "text";
+        eyeref.current.className = "bi bi-eye eye";
+      } else {
+        passref.current.type = "password";
+        eyeref.current.className = "bi bi-eye-slash eye";
+      }
+    };
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -132,6 +148,7 @@ const Signup = () => {
                   What's your email?{" "}
                 </label>
                 <input
+                  required
                   type="text"
                   id="email"
                   name="email"
@@ -147,15 +164,23 @@ const Signup = () => {
                   className="font-semibold mb-2 text-sm inline-block">
                   Create a password{" "}
                 </label>
-                <input
-                  type="text"
-                  id="password"
-                  value={userDetails.password}
-                  onChange={onChange}
-                  name="password"
-                  placeholder="Create a password"
-                  className="block w-full rounded-[4px] border-0  text-black transition-all duration-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[3px] focus:ring-inset focus:ring-white-600 outline-none p-3 hover:ring-black bg-[#fff]"
-                />
+                <div className="pass">
+                  <input
+                    required
+                    type="password"
+                    id="password"
+                    value={userDetails.password}
+                    onChange={onChange}
+                    ref={passref}
+                    name="password"
+                    placeholder="Create a password"
+                    className="block w-full rounded-[4px] border-0  text-black transition-all duration-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[3px] focus:ring-inset focus:ring-white-600 outline-none p-3 hover:ring-black bg-[#fff]"
+                  />
+                  <i
+                    className="bi bi-eye-slash eye"
+                    ref={eyeref}
+                    onClick={togglepass}></i>
+                </div>
               </div>
               <div className="w-4/5 mx-auto text-left py-4">
                 <label
@@ -325,15 +350,15 @@ const Signup = () => {
               <div className="w-full text-left py-4">
                 <button
                   type="submit"
-                  className="block cursor-pointer w-1/2 mx-auto outline-none bg-green-400 text-black p-3 hover:scale-105 translate-all duration-200 font-medium hover:font-semibold text-center rounded-full "
-                >{loading ? (
-                  <div className="flex items-center justify-center">
-                    <Oval color="white" height="25" width="25" />
-                  </div>
-                ) : (
-                  "Sign up"
+                  className="block cursor-pointer w-1/2 mx-auto outline-none bg-green-400 text-black p-3 hover:scale-105 translate-all duration-200 font-medium hover:font-semibold text-center rounded-full ">
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <Oval color="white" height="25" width="25" />
+                    </div>
+                  ) : (
+                    "Sign up"
                   )}
-                  </button>
+                </button>
               </div>
             </form>
             <div className="border-b border-gray-400 w-3/4 my-4 mx-auto"></div>

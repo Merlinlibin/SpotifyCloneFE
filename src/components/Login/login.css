@@ -1,4 +1,12 @@
 header {
-    background-color: #000;
+  background-color: #000;
 }
-
+.pass {
+  position: relative;
+}
+.eye {
+  position: absolute;
+  top: 13px;
+  right: 9px;
+  cursor: pointer;
+}
