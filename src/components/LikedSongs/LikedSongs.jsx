@@ -78,7 +78,7 @@ function LikedSongs() {
           </div>
         )}
         {likedSongs?.length > 0 && (
-          <div className="grid  gap-6 grid-cols-5">
+          <div className="grid  gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {likedSongs.map((song) => {
               return (
                 <Card
